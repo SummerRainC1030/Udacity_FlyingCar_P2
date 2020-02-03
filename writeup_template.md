@@ -29,6 +29,14 @@ You're reading it! Below I describe how I addressed each rubric point and where 
 #### 1. Explain the functionality of what's provided in `motion_planning.py` and `planning_utils.py`
 These scripts contain a basic planning implementation that includes...
 
+The two scripts `motion_planning.py` and `backyard_flyer_solution.py` have similar structures and methods that consist of commands to make quadcopter start, fly to the sets of waypoints and land.
+While in `motion_planning.py`, only grid_start, TARGET_ALTITUDE, grid_goal are given as initialization. Function plan_path() is defined to plan the path to the target position. 
+plan_path() will call `planning_utils.py` which consists of functions to create grids of configuration space and A* algorithm for planning the path.
+
+
+
+
+
 And here's a lovely image of my results (ok this image has nothing to do with it, but it's a nice example of how to include images in your writeup!)
 ![Top Down View](./misc/high_up.png)
 
