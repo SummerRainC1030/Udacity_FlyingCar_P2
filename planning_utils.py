@@ -55,7 +55,11 @@ class Action(Enum):
     EAST = (0, 1, 1)
     NORTH = (-1, 0, 1)
     SOUTH = (1, 0, 1)
-
+    SOUTH_EAST = (1, 1, np.sqrt(2))
+    NORTH_EAST = (-1, 1, np.sqrt(2))
+    SOUTH_WEST = (1, -1, np.sqrt(2))
+    NORTH_WEST = (-1, -1, np.sqrt(2))
+    
     @property
     def cost(self):
         return self.value[2]
@@ -84,7 +88,14 @@ def valid_actions(grid, current_node):
         valid_actions.remove(Action.WEST)
     if y + 1 > m or grid[x, y + 1] == 1:
         valid_actions.remove(Action.EAST)
-
+    if x - 1 < 0 or y - 1 < 0 or grid[x-1,y-1] == 1:
+        valid_actions.remove(Action.NORTH_WEST)
+    if x - 1 < 0 or y + 1 > m or grid[x-1,y+1] == 1:
+        valid_actions.remove(Action.NORTH_EAST)
+    if x + 1 > n or y - 1 < 0 or grid[x+1,y-1] == 1:
+        valid_actions.remove(Action.SOUTH_WEST)
+    if x + 1 > n or y + 1 > m or grid[x+1,y+1] == 1:
+        valid_actions.remove(Action.SOUTH_EAST)    
     return valid_actions
 
 
@@ -144,3 +155,34 @@ def a_star(grid, h, start, goal):
 def heuristic(position, goal_position):
     return np.linalg.norm(np.array(position) - np.array(goal_position))
 
+def prune_path(path):
+    pruned_path = [p for p in path]
+    i = 0
+    while (i + 2) < len(pruned_path):
+        p1 = pruned_path[i]
+        p2 = pruned_path[i+1]
+        p3 = pruned_path[i+2]
+        p2_unnecessary = collinearity_float(p1, p2, p3)
+        if p2_unnecessary:
+            pruned_path.remove(p2)
+        else:
+            i += 1
+
+    return pruned_path
+
+# Define a simple function to add a z coordinate of 1
+def point(p):
+    return np.array([p[0], p[1], 1.])
+
+def collinearity_float(p1, p2, p3, epsilon=1.0): 
+    collinear = False
+    # Create the matrix out of three points
+    # Add points as rows in a matrix
+    mat = np.vstack((point(p1), point(p2), point(p3)))
+    # Calculate the determinant of the matrix. 
+    det = np.linalg.det(mat)
+    # Set collinear to True if the determinant is less than epsilon
+    if det < epsilon:
+        collinear = True
+        
+    return collinear
