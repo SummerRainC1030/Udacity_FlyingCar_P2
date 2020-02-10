@@ -3,6 +3,13 @@
 
 ---
 
+I found udacidrone is missing when I was trying to setup environment for Backyard Flyer. 
+
+So I asked Mentor for help; found out there is a bug on the page on theses command: pip install https://github.com/udacity/udacidrone.git
+
+Do:
+pip install git+https://github.com/udacity/udacidrone.git
+
 
 # Required Steps for a Passing Submission:
 1. Load the 2.5D map in the colliders.csv file describing the environment.
